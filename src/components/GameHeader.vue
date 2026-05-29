@@ -15,18 +15,44 @@
     </div>
  
     <div class="counter-section">
-      你是第 <span class="counter"><span class="counter-num">{{ visitorCount }}</span></span> 位客人！
+      <span class="counter">{{ uptimeText }}</span>
     </div>
 
   </div>
 </template>
 
 <script setup>
-defineProps({
-  visitorCount: {
-    type: Number,
-    default: 0
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+
+const DEPLOY_DATE = new Date('2026-05-29T00:00:00Z')
+
+const uptimeText = ref('')
+let timer = null
+
+const calculateUptime = () => {
+  const now = new Date()
+  const diff = now - DEPLOY_DATE
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+
+  if (days > 0) {
+    uptimeText.value = `${days} 天 ${hours} 小時 ${minutes} 分`
+  } else if (hours > 0) {
+    uptimeText.value = `${hours} 小時 ${minutes} 分`
+  } else {
+    uptimeText.value = `${minutes} 分鐘`
   }
+}
+
+onMounted(() => {
+  calculateUptime()
+  timer = setInterval(calculateUptime, 60000)
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
 })
 </script>
 

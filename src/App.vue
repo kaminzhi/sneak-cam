@@ -4,15 +4,15 @@
       <SidebarMenu />
 
       <div class="main">
-        <GameHeader :visitor-count="visitorCount" />
+        <GameHeader />
 
         <GameSection
           ref="gameSectionRef"
+          v-model:snake-speed="snakeSpeed"
+          v-model:food-speed="foodSpeed"
           :score="score"
           :high-score="highScore"
           :game-state="gameState"
-          :snake-speed="snakeSpeed"
-          :food-speed="foodSpeed"
           @start="startGame"
           @pause="togglePause"
         />
@@ -59,7 +59,6 @@ const currentGesture = ref('none')
 const cameraError = ref('')
 const snakeSpeed = ref(150)
 const foodSpeed = ref(2000)
-const visitorCount = ref(0)
 
 const videoRef = ref(null)
 const canvasRef = ref(null)
@@ -352,14 +351,6 @@ const initHandTracking = async () => {
 }
 
 onMounted(async () => {
-  try {
-    const res = await fetch('/api/counter')
-    const data = await res.json()
-    visitorCount.value = data.count
-  } catch (e) {
-    visitorCount.value = Math.floor(Math.random() * 90000) + 10000
-  }
-
   window.addEventListener('keydown', handleKeydown)
   initHandTracking()
 })
