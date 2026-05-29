@@ -15,7 +15,7 @@
     </div>
  
     <div class="counter-section">
-      <span class="counter">{{ uptimeText }}</span>
+      <span class="counter">已上線{{ uptimeText }}</span>
     </div>
 
   </div>
